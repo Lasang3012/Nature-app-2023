@@ -1,9 +1,9 @@
 # Dockerfile  
 FROM node:18  
 WORKDIR /app  
-COPY package.json ./app
+ADD package.json ./app
 RUN yarn global add nodemon && yarn install
-COPY . /app
+ADD . /app
 EXPOSE 8088  
 CMD ["yarn", "start"]
 VOLUME /app
