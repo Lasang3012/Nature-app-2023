@@ -5,11 +5,7 @@ const morgan = require("morgan");
 
 const app = express();
 
-if (process.env.NODE_ENV === "dev") {
-  console.log(process.env.NODE_ENV + "neu la dev");
-  app.use(morgan("dev"));
-}
-console.log(process.env.NODE_ENV + "neu la pro");
+app.use(morgan("dev"));
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
