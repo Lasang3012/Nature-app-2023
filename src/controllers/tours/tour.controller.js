@@ -1,9 +1,21 @@
 const fs = require("fs");
 const tourModule = require("../../modules/tours/tour.module");
 
+class TourQuery {
+  constructor({ page, limit, name, duration }) {
+    this.page = page;
+    this.limit = limit;
+    this.name = name;
+    this.duration = duration;
+  }
+}
+
 exports.getTours = async (req, res) => {
   const newTourModule = new tourModule();
-  const tours = await newTourModule.getTours();
+  const queryAb = new TourQuery({ ...req.query });
+  console.log(queryAb);
+
+  const tours = await newTourModule.getTours({ ...queryAb });
   res.status(200).json({
     status: "success",
     data: tours,
@@ -11,7 +23,6 @@ exports.getTours = async (req, res) => {
 };
 
 exports.importTourData = (req, res) => {
-  console.log("aaaa");
   // nếu file json bỏ cùng với file này thì dùng cách sau
   // const tours = JSON.parse(
   //   fs.readFileSync(
@@ -61,6 +72,15 @@ exports.createTour = async (req, res) => {
   res.status(200).json({
     status: "success",
     data: newTour,
+  });
+};
+
+exports.getMonthlyPlan = async (req, res) => {
+  const newTourModule = new tourModule();
+  const result = await newTourModule.getMonthlyPlan();
+  res.status(200).json({
+    status: "success",
+    data: result,
   });
 };
 

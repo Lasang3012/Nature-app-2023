@@ -8,6 +8,7 @@ router.param("id", (req, res, next, value) => {
 });
 
 router.route("/").get(tour.getTours).post(tour.createTour);
+router.route("/monthly-plan").get(tour.getMonthlyPlan);
 router.route("/import-data").post(tour.importTourData);
 router
   .route("/:id")
