@@ -2,13 +2,12 @@
   "name": "nature-app-2023",
   "version": "1.0.0",
   "description": "Dockerized node.js app",
-  "main": "index.js",
   "author": "",
   "license": "ISC",
   "scripts": {
     "start:dev": "nodemon server.js",
-    "start:pro": "NODE_ENV=pro nodemon server.js",
-    "generate-schema": "cat prisma/base.schema.prisma ./*/*/*.schema.prisma > prisma/schema.prisma"
+    "start:pro": "NODE_ENV=pro nodemon ./server.js",
+    "generate-schema": "cat prisma/base.schema.prisma src/*/*/*.schema.prisma > prisma/schema.prisma"
   },
   "dependencies": {
     "dotenv": "^16.0.3",

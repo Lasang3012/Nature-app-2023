@@ -13,24 +13,24 @@ services:
     ports:
       - '3432:5432'
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -d nature app postgres']
+      test: ['CMD-SHELL', 'pg_isready -d nature -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - nature-app-dev
 
-  dev-code:
-    container_name: nature-app-code
-    image: nature-app-2023
-    restart: always
-    ports:
-      - '4000:8088'
-    networks:
-      - nature-app-code
-    volumes:
-      - .:/app
-      - ./volumes:/data/postgres
+  # dev-code:
+  #   container_name: nature-app-code
+  #   image: nature-app-2023
+  #   restart: always
+  #   ports:
+  #     - '4000:8088'
+  #   networks:
+  #     - nature-app-code
+  #   volumes:
+  #     - .:/app
+  #     - ./volumes:/data/postgres
 
 networks:
   nature-app-dev:
