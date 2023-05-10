@@ -1,12 +1,46 @@
+const fs = require("fs");
 const tourModule = require("../../modules/tours/tour.module");
 
 exports.getTours = async (req, res) => {
   const newTourModule = new tourModule();
   const tours = await newTourModule.getTours();
-  console.log(tours);
   res.status(200).json({
     status: "success",
     data: tours,
+  });
+};
+
+exports.importTourData = (req, res) => {
+  console.log("aaaa");
+  // nếu file json bỏ cùng với file này thì dùng cách sau
+  // const tours = JSON.parse(
+  //   fs.readFileSync(
+  //     `${__dirname}/tours-simple.json`,
+  //     "utf-8"
+  //   )
+  // );
+  const tours = JSON.parse(
+    fs.readFileSync("./dev-data/tours-simple.json", "utf-8")
+  );
+  const newTourModule = new tourModule();
+  tours.map((tour) => {
+    newTourModule.createTour({
+      name: tour.name,
+      duration: tour.duration,
+      maxGroupSize: tour.maxGroupSize,
+      difficulty: tour.difficulty,
+      ratingsAverage: tour.ratingsAverage,
+      ratingsQuantity: tour.ratingsQuantity,
+      price: tour.price,
+      summary: tour.summary,
+      description: tour.description,
+      imageCover: tour.imageCover,
+      images: tour.images,
+    });
+  });
+
+  res.status(200).json({
+    status: "success",
   });
 };
 
