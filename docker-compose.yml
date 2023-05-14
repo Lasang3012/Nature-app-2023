@@ -2,7 +2,6 @@ version: '3.9'
 
 services:
   dev-db:
-    container_name: nature-app-db
     image: postgres
     environment:
       - POSTGRES_USER=${PG_USER}
@@ -11,31 +10,32 @@ services:
       - PGDATA=/data/postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
-      - '3432:5432'
+      - '5432:5432'
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -d nature -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - nature-app-dev
+      - nature-app
 
-  # dev-code:
-  #   container_name: nature-app-code
-  #   image: nature-app-2023
-  #   restart: always
-  #   ports:
-  #     - '4000:8088'
-  #   networks:
-  #     - nature-app-code
-  #   volumes:
-  #     - .:/app
-  #     - ./volumes:/data/postgres
+  dev-code:
+    container_name: nature-app-code
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - '4000:8088'
+    depends_on:
+      dev-db: 
+        condition: service_healthy
+    networks:
+      - nature-app
+    volumes:
+      - .:/app
 
 networks:
-  nature-app-dev:
-    name: nature-app-dev
-    external: false
-  nature-app-code:
-    name: nature-app-code
+  nature-app:
+    name: nature-app
     external: false

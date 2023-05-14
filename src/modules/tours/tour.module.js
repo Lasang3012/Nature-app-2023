@@ -5,13 +5,17 @@ module.exports = class TourModule {
   constructor() {}
 
   async getTours(queryObject) {
-    const page = parseInt(queryObject.page);
-    const limit = parseInt(queryObject.limit);
-    const tours = await prisma.tour.findMany({
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-    return tours;
+    try {
+      const page = parseInt(queryObject.page);
+      const limit = parseInt(queryObject.limit);
+      const tours = await prisma.tour.findMany({
+        take: limit,
+        skip: (page - 1) * limit,
+      });
+      return tours;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async getTour(tourId) {
