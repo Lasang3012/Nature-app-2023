@@ -18,7 +18,7 @@ $ yarn start:dev
 
 ## Run docker
 # 1) Build mage:
-$ docker build --no-cache -t nature-app-2023 .
+$ docker build -t nature-app-2023 .
 # 2) chạy container ( mỗi lần thay đổi code thì stop nó lại rồi chạy lại )
 $ docker compose up -d --build
 

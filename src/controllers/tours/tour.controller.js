@@ -1,5 +1,7 @@
 const fs = require("fs");
 const tourModule = require("../../modules/tours/tour.module");
+const catchAsync = require("./../../utils/catch.error");
+const AppError = require("./../../utils/app.error");
 
 class TourQuery {
   constructor({ page, limit, name, duration }) {
@@ -10,11 +12,9 @@ class TourQuery {
   }
 }
 
-exports.getTours = async (req, res) => {
+exports.getTours = async (req, res, next) => {
   const newTourModule = new tourModule();
   const queryAb = new TourQuery({ ...req.query });
-  console.log(queryAb);
-
   const tours = await newTourModule.getTours({ ...queryAb });
   res.status(200).json({
     status: "success",
@@ -22,7 +22,7 @@ exports.getTours = async (req, res) => {
   });
 };
 
-exports.importTourData = (req, res) => {
+exports.importTourData = catchAsync(async (req, res, next) => {
   // nếu file json bỏ cùng với file này thì dùng cách sau
   // const tours = JSON.parse(
   //   fs.readFileSync(
@@ -34,8 +34,8 @@ exports.importTourData = (req, res) => {
     fs.readFileSync("./dev-data/tours-simple.json", "utf-8")
   );
   const newTourModule = new tourModule();
-  tours.map((tour) => {
-    newTourModule.createTour({
+  tours.map(async (tour) => {
+    await newTourModule.createTour({
       name: tour.name,
       duration: tour.duration,
       maxGroupSize: tour.maxGroupSize,
@@ -47,25 +47,29 @@ exports.importTourData = (req, res) => {
       description: tour.description,
       imageCover: tour.imageCover,
       images: tour.images,
+      startDates: tour.startDates,
     });
   });
 
   res.status(200).json({
     status: "success",
   });
-};
+});
 
-exports.getTour = async (req, res) => {
+exports.getTour = catchAsync(async (req, res, next) => {
   const newTourModule = new tourModule();
   const tourId = req.params.id;
   const tour = await newTourModule.getTour(tourId);
+  if (!tour) {
+    return next(new AppError("No tour found with that ID", 404));
+  }
   res.status(200).json({
     status: "success",
     data: tour,
   });
-};
+});
 
-exports.createTour = async (req, res) => {
+exports.createTour = catchAsync(async (req, res, next) => {
   const newTourModule = new tourModule();
   const data = req.body;
   const newTour = await newTourModule.createTour(data);
@@ -73,31 +77,40 @@ exports.createTour = async (req, res) => {
     status: "success",
     data: newTour,
   });
-};
+});
 
-exports.getMonthlyPlan = async (req, res) => {
+exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const newTourModule = new tourModule();
   const result = await newTourModule.getMonthlyPlan();
   res.status(200).json({
     status: "success",
     data: result,
   });
-};
+});
 
-exports.updateTour = async (req, res) => {
+exports.updateTour = catchAsync(async (req, res, next) => {
   const tourId = req.params.id;
+  const tour = await newTourModule.getTour(tourId);
+  if (!tour) {
+    return next(new AppError("No tour found with that ID", 404));
+  }
   const newTourModule = new tourModule();
   const newTour = await newTourModule.updateTour(tourId);
   res.status(200).json({
     status: "success",
     data: newTour,
   });
-};
+});
 
-exports.deleteTour = async (req, res) => {
+exports.deleteTour = catchAsync(async (req, res, next) => {
+  const tourId = req.params.id;
+  const tour = await newTourModule.getTour(tourId);
+  if (!tour) {
+    return next(new AppError("No tour found with that ID", 404));
+  }
   const newTourModule = new tourModule();
-  const newTour = await newTourModule.deleteTour();
+  await newTourModule.deleteTour();
   res.status(200).json({
     status: "success",
   });
-};
+});
