@@ -1,4 +1,4 @@
-model Tour {
+model User {
     id              String   @id @default(uuid())
     createdAt       DateTime @default(now()) @map("created_at")
     updatedAt       DateTime @default(now()) @map("updated_at")
@@ -8,5 +8,5 @@ model Tour {
     password        String
     passwordConfirm String   @map("password_confirm")
 
-    @@map("tour")
+    @@map("user")
 }
