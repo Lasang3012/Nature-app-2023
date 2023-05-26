@@ -1,12 +1,14 @@
 model User {
-    id              String   @id @default(uuid())
-    createdAt       DateTime @default(now()) @map("created_at")
-    updatedAt       DateTime @default(now()) @map("updated_at")
-    name            String
-    email           String
-    image           String?
-    password        String
-    passwordConfirm String   @map("password_confirm")
+    id                   String    @id @default(uuid())
+    createdAt            DateTime  @default(now()) @map("created_at")
+    updatedAt            DateTime  @default(now()) @map("updated_at")
+    name                 String
+    email                String
+    image                String?
+    password             String
+    passwordConfirm      String    @map("password_confirm")
+    passwordResetToken   String?   @map("password_reset_token")
+    passwordResetExpires DateTime? @map("password_reset_expires")
 
     @@map("user")
 }

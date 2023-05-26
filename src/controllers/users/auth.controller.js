@@ -30,3 +30,22 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const newUserModule = new userModule();
+  const user = await newUserModule.getUser({ email: req.body.email });
+  if (!user) {
+    return next(new AppError("User not found.", 404));
+  }
+  const resetTokenData = newUserModule.createPasswordResetToken();
+  console.log(resetTokenData);
+  const updateUser = await newUserModule.updateUser(user.id, {
+    ...resetTokenData,
+  });
+  console.log("updateUser", updateUser);
+  // next();
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  next();
+});
