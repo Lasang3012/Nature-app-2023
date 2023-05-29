@@ -8,6 +8,6 @@ userRouter.route("/").post(user.createUser).get(user.getUsers);
 userRouter.route("/:id").get(user.getUser);
 userRouter.route("/login").post(user.loginUser);
 userRouter.route("/forgot-password").post(auth.forgotPassword);
-userRouter.route("/reset-password").post(auth.resetPassword);
+userRouter.route("/reset-password").patch(auth.resetPassword);
 
 module.exports = userRouter;

@@ -104,12 +104,12 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 
 exports.deleteTour = catchAsync(async (req, res, next) => {
   const tourId = req.params.id;
+  const newTourModule = new tourModule();
   const tour = await newTourModule.getTour(tourId);
   if (!tour) {
     return next(new AppError("No tour found with that ID", 404));
   }
-  const newTourModule = new tourModule();
-  await newTourModule.deleteTour();
+  await newTourModule.deleteTour(tourId);
   res.status(200).json({
     status: "success",
   });

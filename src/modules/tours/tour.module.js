@@ -36,6 +36,25 @@ module.exports = class TourModule {
     return newTour;
   }
 
+  async deleteTour(tourId) {
+    prisma.$use(async (params, next) => {
+      console.log(params);
+      if (params.model == "Tour") {
+        if (params.action == "delete") {
+          params.action = "update";
+          params.args["data"] = { status: "inactive" };
+        }
+      }
+      return next(params);
+    });
+
+    await prisma.tour.delete({
+      where: {
+        id: tourId,
+      },
+    });
+  }
+
   async updateTour(tourId) {
     const tour = await prisma.tour.update({
       where: {
@@ -65,13 +84,5 @@ module.exports = class TourModule {
     `;
     result.map((el) => (el.count = parseInt(el.count)));
     return result;
-  }
-
-  async deleteTour(tourId) {
-    await prisma.tour.delete({
-      where: {
-        id: tourId,
-      },
-    });
   }
 };

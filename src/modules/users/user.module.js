@@ -36,7 +36,6 @@ module.exports = class UserModule {
 
   async updateUser(userId, data) {
     try {
-      console.log(data);
       const user = await prisma.user.update({
         where: {
           id: userId,
